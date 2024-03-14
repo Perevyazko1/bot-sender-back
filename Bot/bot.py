@@ -22,14 +22,12 @@ redis_db = 0
 redis_client = redis.Redis(host=redis_host, port=redis_port, db=redis_db)
 
 async def check_and_send_notifications():
-    print('работает')
     while True:
         # Пытаемся получить задачу из Redis (блокирующий вызов с таймаутом в 1 секунду)
         task_data = redis_client.blpop('tasks', timeout=1)
         if task_data:
             _, task_json = task_data
             task = json.loads(task_json.decode('utf-8'))
-            print(task)
             chat_id = task['chat_ids']
             message_text = task['message_text']
         else:
@@ -42,22 +40,19 @@ def clear_text(a):
 
 @dp.message_handler(commands="start")
 async def start(message: types.Message):
-    print("start")
-    global id_user
-    id_user = message.from_id
-    group = message.chat.id
-    print(group)
-    # ikb = InlineKeyboardButton("Перейти", web_app=WebAppInfo(url='https://perevyazko1.github.io/testprojectwebappbot'))
-    # kb = KeyboardButton("Перейти", web_app=WebAppInfo(url='https://perevyazko1.github.io/testprojectwebappbot'))
-    markup = types.InlineKeyboardMarkup()
-    markup.add(types.InlineKeyboardButton("открыть страницу", url="https://perevyazko1.github.io/testprojectwebappbot", callback_data='copy_text'))
-    await message.answer(f'Нажмите и скопируйте id чата  \n `{group}`', reply_markup=markup,parse_mode=ParseMode.MARKDOWN)
-    # markup = InlineKeyboardMarkup().add(ikb)
-    # reply_markup = ReplyKeyboardMarkup(resize_keyboard=True).add(kb)
+    await message.answer(f'Привет {message.from_user.full_name} \n\n' '<i>Этот бот предназначен для отправки заданных '
+                         'сообщений в ТОЛЬКО в группу по расписанию.\n\n'
+                         'Для в заимодействия с ботом необходимо добавить его в группу и назначить администратором.</i>\n\n'
+                         '<b><u>ЗАДАЧИ МОЖЕТ ВЫСТАВЛЯТЬ ТОЛЬКО АДМИНИСТРАТОР ЧАТА</u></b>',
+                         parse_mode=types.ParseMode.HTML, disable_notification=True)
 
-    # Отправка сообщения с кнопками в чат
-    # await message.answer("Привет! Нажми на кнопку для перехода.", reply_markup=markup)
-    # await message.answer("Привет! Нажми на кнопку для перехода.", reply_markup=reply_markup)
+
+@dp.message_handler(commands="task")
+async def task(message: types.Message):
+    group = message.chat.id
+    markup = types.InlineKeyboardMarkup()
+    markup.add(types.InlineKeyboardButton("открыть страницу", url=os.getenv('URL_FRONT'), callback_data='copy_text'))
+    await message.answer(f'Нажмите и скопируйте id чата  \n `{group}`', reply_markup=markup,parse_mode=ParseMode.MARKDOWN)
 
 
 @dp.message_handler()
@@ -68,7 +63,6 @@ async def handle_message(message: types.Message):
 
 @dp.message_handler(commands="list_task")
 async def button_task(message: types.Message):
-    print("test")
     marcup = types.ReplyKeyboardMarkup()
     marcup.add(types.KeyboardButton("открыть страницу", webapp="https://perevyazko1.github.io/botsenderfront"))
 
@@ -110,7 +104,6 @@ async def send_task():
             'Суббота': aioschedule.every().saturday,
             'Воскресенье': aioschedule.every().sunday,
         }
-        print(sql_tasks)
         for task in sql_tasks:
             day_of_week = task.get('day_of_week')
             if day_of_week in day_mapping:
