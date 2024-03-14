@@ -25,7 +25,11 @@ SECRET_KEY = 'django-insecure-s!+ftaytjqu-l$7yoahgtw7dr$pdfi_1yq$)v&0nw9$xd%!(hr
 DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
-CSRF_TRUSTED_ORIGINS = ['http://localhost', 'https://localhost']
+CSRF_TRUSTED_ORIGINS = ['http://localhost',
+                        'https://localhost'
+                        'https://188.225.47.208'
+                        'http://188.225.47.208'
+                        ]
 
 # Application definition
 
@@ -123,6 +127,8 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
@@ -135,7 +141,3 @@ CORS_ORIGIN_ALLOW_ALL = True
 
 SECURE_CROSS_ORIGIN_OPENER_POLICY = None
 
-# CSRF_TRUSTED_ORIGINS = [
-#     f"{os.getenv('SERVER_HOST')}:{os.getenv('SERVER_PORT')}",
-#     'http://localhost:8000',
-# ]
