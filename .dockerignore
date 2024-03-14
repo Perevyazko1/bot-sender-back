@@ -1,0 +1,50 @@
+# Игнорирование файлов и папок виртуальной среды
+venv/
+env/
+ENV/
+
+# Игнорирование локальной базы данных, если она есть
+*.sqlite3
+*.sqlite3-journal
+
+# Игнорирование кэша Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Игнорирование файлов и папок IDE/редакторов
+.idea/
+.vscode/
+*.swp
+*.swo
+*.sublime-workspace
+
+# Игнорирование файлов логов и данных
+*.log
+*.csv
+*.dat
+*.out
+*.pid
+*.seed
+
+# Игнорирование других файлов, не относящихся к исходному коду
+.DS_Store
+Thumbs.db

@@ -1,0 +1,45 @@
+version: "3.8"
+
+services:
+  redis:
+    container_name: redis_freelance
+    build: ./redis
+    restart: always
+    networks:
+      - freelance_network
+
+  django:
+    build:
+      context: ./senderdjango
+      dockerfile: Dockerfile
+    volumes:
+      - ./senderdjango:/usr/src/app
+      - ./senderdjango/db.sqlite3:/usr/src/app/db.sqlite3
+      - static_volume:/usr/src/app/staticfiles
+    ports:
+      - "8000:80"
+    restart: always
+    networks:
+      - freelance_network
+    depends_on:
+      - redis
+      - bot
+    env_file:
+      - Bot/.env
+
+  bot:
+    build:
+      context: ./Bot
+      dockerfile: Dockerfile
+    networks:
+      - freelance_network
+    depends_on:
+      - redis
+    restart: always
+
+networks:
+  freelance_network:
+    driver: bridge
+
+volumes:
+  static_volume:
