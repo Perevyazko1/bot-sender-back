@@ -15,11 +15,8 @@ services:
     volumes:
       - ./senderdjango:/usr/src/app
       - ./senderdjango/db.sqlite3:/usr/src/app/db.sqlite3
-      - ./senderdjango/:/etc/nginx/nginx.conf/:ro
-      - ./certbot/www/:/var/www/certbot/:ro
     ports:
       - "8000:80"
-      - "443:443"
     restart: always
     networks:
       - freelance_network
@@ -39,12 +36,23 @@ services:
       - redis
     restart: always
 
+
+  webserver:
+      image: nginx:latest
+      ports:
+        - 80:80
+        - 443:443
+      restart: always
+      volumes:
+        - ./nginx/conf/:/etc/nginx/nginx.conf/:ro
+        - ./certbot/www:/var/www/certbot/:ro
+        - ./certbot/conf/:/etc/nginx/ssl/:ro
+
   certbot:
-    image: certbot/certbot:latest
+    image: certbot/cerbot:latest
     volumes:
       - ./certbot/www/:/var/www/certbot/:rw
       - ./certbot/conf/:/etc/letsencrypt/:rw
-
 
 networks:
   freelance_network:
