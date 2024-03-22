@@ -19,7 +19,7 @@ RUN python manage.py collectstatic --noinput
 #RUN apk update && apk add nginx
 #
 ## Копируем конфигурацию Nginx
-#COPY conf.d /etc/nginx/conf.d
+#COPY nginx.conf /etc/nginx/nginx.conf
 
 
 
