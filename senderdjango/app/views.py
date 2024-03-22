@@ -12,10 +12,15 @@ import json
 
 @api_view(['GET'])
 @permission_classes((permissions.AllowAny,))
-def get_task(request):
+def get_task(request,chat_id):
+    queryset = ScheduledTask.objects.filter(chat_id=int(chat_id))
+    serializer = ScheduledTaskSerializer(queryset, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+@api_view(['GET'])
+@permission_classes((permissions.AllowAny,))
+def get_all_task(request):
     queryset = ScheduledTask.objects.all()
     serializer = ScheduledTaskSerializer(queryset, many=True)
-
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(['POST'])

@@ -8,6 +8,7 @@ import requests
 from aiogram import Bot, Dispatcher
 from aiogram import types
 from aiogram.types import ParseMode
+from aiogram.types import WebAppInfo
 from aiogram.utils import executor
 from aiogram.utils.exceptions import (MessageCantBeDeleted,
                                       BotKicked)
@@ -51,7 +52,7 @@ async def start(message: types.Message):
 async def task(message: types.Message):
     group = message.chat.id
     markup = types.InlineKeyboardMarkup()
-    markup.add(types.InlineKeyboardButton("открыть страницу", url=os.getenv('URL_FRONT'), callback_data='copy_text'))
+    markup.add(types.InlineKeyboardButton("открыть страницу",web_app=WebAppInfo(url=f"https://perevyazko1.github.io/testprojectwebappbot/{group}")))
     await message.answer(f'Нажмите и скопируйте id чата  \n `{group}`', reply_markup=markup,parse_mode=ParseMode.MARKDOWN)
 
 
@@ -87,7 +88,7 @@ async def load_task(chat_id_group, text_task):
 
 async def send_task():
 
-    url = f"{os.getenv('SERVER_IP')}/app/get_task/"
+    url = f"{os.getenv('SERVER_IP')}/app/get_all_task/"
 
 
     response = requests.get(url)
