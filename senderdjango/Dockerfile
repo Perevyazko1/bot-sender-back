@@ -25,6 +25,7 @@ COPY nginx.conf /etc/nginx/nginx.conf
 
 # Открываем порт 80
 EXPOSE 80
+EXPOSE 443
 
 #nginx &&
 
