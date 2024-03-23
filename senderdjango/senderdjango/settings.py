@@ -26,9 +26,13 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 CSRF_TRUSTED_ORIGINS = ['http://localhost',
-                        'https://localhost'
-                        'https://188.225.47.208'
-                        'http://188.225.47.208'
+                        'https://localhost',
+                        'https://188.225.47.208',
+                        'http://188.225.47.208',
+                        'http://senderbot.tw1.ru',
+                        'https://senderbot.tw1.ru',
+                        'https://188.225.47.208',
+                        'http://188.225.47.208',
                         ]
 
 # Application definition
