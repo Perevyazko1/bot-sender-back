@@ -30,11 +30,11 @@ services:
       - bot
     env_file:
       - Bot/.env
-    command: >
-      certonly --webroot --webroot-path=/var/www/certbot
-      -d botsender.tw1.ru -d www.botsender.tw1.ru
-      --email a.perevyazko@gmail.com
-      --agree-tos --no-eff-email 
+#    command: >
+#      certonly --webroot --webroot-path=/var/www/certbot
+#      -d botsender.tw1.ru -d www.botsender.tw1.ru
+#      --email a.perevyazko@gmail.com
+#      --agree-tos --no-eff-email
 
 
 
