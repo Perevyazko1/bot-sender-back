@@ -20,7 +20,7 @@ services:
       - ./certbot/conf/:/etc/nginx/ssl/:ro
 
     ports:
-      - "80:80"
+      - "8000:80"
       - "443:443"
     restart: always
     networks:
