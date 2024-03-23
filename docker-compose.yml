@@ -21,6 +21,7 @@ services:
 
     ports:
       - "80:80"
+      - "443:443"
     restart: always
     networks:
       - freelance_network
@@ -29,6 +30,11 @@ services:
       - bot
     env_file:
       - Bot/.env
+    command: >
+      certonly --webroot --webroot-path=/var/www/certbot
+      -d botsender.tw1.ru -d www.botsender.tw1.ru
+      --email a.perevyazko@gmail.com
+      --agree-tos --no-eff-email 
 
 
 
@@ -50,6 +56,9 @@ services:
     volumes:
       - ./certbot/www/:/var/www/certbot/:rw
       - ./certbot/conf/:/etc/letsencrypt/:rw
+
+    depends_on:
+      - django
 
 
 networks:
