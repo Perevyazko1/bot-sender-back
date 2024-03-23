@@ -29,6 +29,6 @@ EXPOSE 80
 #nginx &&
 
 # Запускаем Nginx и Gunicorn
-CMD ["sh", "-c", "nginx && exec gunicorn senderdjango.wsgi:application --bind 0.0.0.0:8000"]
+CMD ["sh", "-c", "nginx && exec gunicorn senderdjango.wsgi:application --bind 0.0.0.0:80"]
 
 

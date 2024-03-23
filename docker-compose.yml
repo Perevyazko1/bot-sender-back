@@ -20,7 +20,7 @@ services:
       - ./certbot/conf/:/etc/nginx/ssl/:ro
 
     ports:
-      - "8000:80"
+      - "80:80"
     restart: always
     networks:
       - freelance_network
