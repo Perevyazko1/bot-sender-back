@@ -52,7 +52,8 @@ async def start(message: types.Message):
 async def task(message: types.Message):
     group = message.chat.id
     markup = types.InlineKeyboardMarkup()
-    markup.add(types.InlineKeyboardButton("открыть страницу",web_app=WebAppInfo(url=f"https://perevyazko1.github.io/testprojectwebappbot/{group}")))
+    markup.add(types.InlineKeyboardButton("открыть страницу", url=f"{os.getenv('URL_FRONT')}{group}", callback_data='copy_text'))
+    # markup.add(types.InlineKeyboardButton("открыть страницу",web_app=WebAppInfo(url=f"https://perevyazko1.github.io/testprojectwebappbot/{group}")))
     await message.answer(f'Нажмите и скопируйте id чата  \n `{group}`', reply_markup=markup,parse_mode=ParseMode.MARKDOWN)
 
 
@@ -62,10 +63,10 @@ async def handle_message(message: types.Message):
     if modified_text != message.text:
        await message.reply(modified_text)
 
-@dp.message_handler(commands="list_task")
-async def button_task(message: types.Message):
-    marcup = types.ReplyKeyboardMarkup()
-    marcup.add(types.KeyboardButton("открыть страницу", webapp="https://perevyazko1.github.io/botsenderfront"))
+# @dp.message_handler(commands="list_task")
+# async def button_task(message: types.Message):
+#     marcup = types.ReplyKeyboardMarkup()
+#     marcup.add(types.KeyboardButton("открыть страницу", webapp="https://perevyazko1.github.io/botsenderfront"))
 
 
 
