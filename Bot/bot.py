@@ -52,9 +52,9 @@ async def start(message: types.Message):
 async def task(message: types.Message):
     group = message.chat.id
     markup = types.InlineKeyboardMarkup()
-    markup.add(types.InlineKeyboardButton("открыть страницу", url=f"{os.getenv('URL_FRONT')}{group}", callback_data='copy_text'))
+    markup.add(types.InlineKeyboardButton("Работа с задачами", url=f"{os.getenv('URL_FRONT')}{group}", callback_data='copy_text'))
     # markup.add(types.InlineKeyboardButton("открыть страницу",web_app=WebAppInfo(url=f"https://perevyazko1.github.io/testprojectwebappbot/{group}")))
-    await message.answer(f'Нажмите и скопируйте id чата  \n `{group}`', reply_markup=markup,parse_mode=ParseMode.MARKDOWN)
+    await message.answer(f'Нажмите кнопку', reply_markup=markup,parse_mode=ParseMode.MARKDOWN)
 
 
 @dp.message_handler()
