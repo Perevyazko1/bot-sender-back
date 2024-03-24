@@ -129,6 +129,7 @@ async def send_task():
             'Суббота': aioschedule.every().saturday,
             'Воскресенье': aioschedule.every().sunday,
         }
+        print(create_tasks)
 
         if create_tasks:
             _, task_json = create_tasks
