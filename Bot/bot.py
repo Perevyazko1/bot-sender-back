@@ -71,7 +71,7 @@ async def handle_message(message: types.Message):
 
 
 @dp.message_handler()
-async def load_task(message: types.Message):
+async def delete_command(message: types.Message):
     if message.text == '/start@CREATOR_TASK_FOR_CHAT_BOT' or message.text == '/task@CREATOR_TASK_FOR_CHAT_BOT' \
             or message.text == '/delete_task@CREATOR_TASK_FOR_CHAT_BOT' or message.text == '/list_task@CREATOR_TASK_FOR_CHAT_BOT':
         try:
@@ -81,6 +81,7 @@ async def load_task(message: types.Message):
 
 @dp.message_handler()
 async def load_task(chat_id_group, text_task):
+    print(text_task)
     try:
         await dp.bot.send_message(chat_id=chat_id_group, text=text_task)
         await asyncio.sleep(1)
@@ -129,12 +130,12 @@ async def send_task():
             'Суббота': aioschedule.every().saturday,
             'Воскресенье': aioschedule.every().sunday,
         }
-        print(create_tasks)
 
         if create_tasks:
             _, task_json = create_tasks
             task = json.loads(task_json.decode('utf-8'))
             day_of_week = task.get('day_of_week')
+            print(task)
             day_mapping[day_of_week].at(time_str=str(task.get('time'))).do(load_task, task.get('chat_id'),
                                                                            task.get('task')).tag(f'{task.get("id")}')
         if delete_tasks:
