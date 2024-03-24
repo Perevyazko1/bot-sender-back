@@ -26,7 +26,6 @@ def get_all_task(request):
 @api_view(['POST'])
 @permission_classes((permissions.AllowAny,))
 def create_task(request):
-    print(request.data["chat_id"])
     ScheduledTask.objects.update_or_create(
         day_of_week= request.data["day_of_week"],
         chat_id= request.data.get('chat_id', 0),
