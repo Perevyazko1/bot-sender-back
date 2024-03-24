@@ -135,8 +135,9 @@ async def send_task():
             _, task_json = create_tasks
             task = json.loads(task_json.decode('utf-8'))
             day_of_week = task.get('day_of_week')
-            day_mapping[day_of_week].at(time_str=task.get('time')).do(load_task, task.get('chat_id'),
-                                                                           task.get('task')).tag(f'{task.get("id")}')
+            day_mapping[day_of_week].at(time_str=task.get('time')).do(load_task, task.get('chat_id'),task.get('task')).tag(f'{task.get("id")}')
+            aioschedule.every().sunday.at(time_str=task.get('time')).do(load_task, task.get('chat_id'),"aioschedule.every().sunday").tag(f'{task.get("id")}')
+            aioschedule.every().sunday.at(time_str="21:44").do(load_task, task.get('chat_id'),task.get('task')).tag(f'{task.get("id")}')
         if delete_tasks:
             _, task_json = delete_tasks
             task = json.loads(task_json.decode('utf-8'))
