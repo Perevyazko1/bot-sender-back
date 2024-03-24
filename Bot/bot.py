@@ -110,7 +110,7 @@ async def send_task():
         for task in sql_tasks:
             day_of_week = task.get('day_of_week')
             if day_of_week in day_mapping:
-                day_mapping[day_of_week].at(time_str=str(task.get('time'))).do(load_task, task.get('chat_id'),
+                day_mapping[day_of_week].at(time_str=task.get('time')).do(load_task, task.get('chat_id'),
                                                                                task.get('task')).tag(f'{task.get("id")}')
             else:
                 print(f"Unsupported day of the week: {day_of_week}")
@@ -135,7 +135,6 @@ async def send_task():
             _, task_json = create_tasks
             task = json.loads(task_json.decode('utf-8'))
             day_of_week = task.get('day_of_week')
-            print(task)
             day_mapping[day_of_week].at(time_str=task.get('time')).do(load_task, task.get('chat_id'),
                                                                            task.get('task')).tag(f'{task.get("id")}')
         if delete_tasks:
