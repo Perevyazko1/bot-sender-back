@@ -2,6 +2,8 @@ version: "3.8"
 
 services:
   redis:
+    environment:
+      - TZ=Europe/Moscow
     container_name: redis_freelance
     build: ./redis
     restart: always
@@ -9,6 +11,8 @@ services:
       - freelance_network
 
   django:
+    environment:
+      - TZ=Europe/Moscow
     build:
       context: ./senderdjango
       dockerfile: Dockerfile
@@ -34,6 +38,8 @@ services:
 
 
   bot:
+    environment:
+      - TZ=Europe/Moscow
     build:
       context: ./Bot
       dockerfile: Dockerfile
@@ -44,6 +50,8 @@ services:
     restart: always
 
   certbot:
+    environment:
+      - TZ=Europe/Moscow
     image: certbot/certbot:latest
     networks:
       - freelance_network
