@@ -49,7 +49,7 @@ async def start(message: types.Message):
                          parse_mode=types.ParseMode.HTML, disable_notification=True)
 
 
-@dp.message_handler(commands="task")
+@dp.message_handler(commands="task_create")
 async def task(message: types.Message):
     group = message.chat.id
     markup = types.InlineKeyboardMarkup()
@@ -58,31 +58,10 @@ async def task(message: types.Message):
     # markup.add(types.InlineKeyboardButton("открыть страницу",web_app=WebAppInfo(url=f"https://perevyazko1.github.io/testprojectwebappbot/{group}")))
     await message.answer(f'Нажмите кнопку', reply_markup=markup, parse_mode=ParseMode.MARKDOWN)
 
-    if message.text == '/task_create@CREATOR_TASK_FOR_CHAT_BOT':
-        try:
-            await message.delete()
-        except MessageCantBeDeleted:
-            await asyncio.sleep(1)
-
-
-@dp.message_handler()
-async def handle_message(message: types.Message):
-    modified_text = re.sub(r"(https://www\.)(instagram\.com/.+)", r"\1dd\2", message.text)
-    if modified_text != message.text:
-        await message.answer(modified_text)
-        try:
-            await message.delete()
-        except MessageCantBeDeleted:
-            await asyncio.sleep(1)
-
-
-class ReplyFilterBot(BoundFilter):
-    async def check(self, msg: types.Message):
-        try:
-            if msg.reply_to_message.from_user.id == bot.id:
-                return True
-        except Exception:
-            pass
+    try:
+        await message.delete()
+    except MessageCantBeDeleted:
+        await asyncio.sleep(1)
 
 
 ANSWER_PHRASE = [
@@ -124,9 +103,17 @@ ANSWER_PHRASE = [
 ]
 
 
-@dp.message_handler(ReplyFilterBot())
-async def joke_answer(message: types.Message):
-    await message.answer(text=random.choice(ANSWER_PHRASE))
+@dp.message_handler()
+async def handle_message(message: types.Message):
+    modified_text = re.sub(r"(https://www\.)(instagram\.com/.+)", r"\1dd\2", message.text)
+    if modified_text != message.text:
+        await message.answer(modified_text)
+        try:
+            await message.delete()
+        except MessageCantBeDeleted:
+            await asyncio.sleep(1)
+    elif message.reply_to_message.from_user.id == bot.id:
+        await message.answer(text=random.choice(ANSWER_PHRASE))
 
 
 @dp.message_handler()
