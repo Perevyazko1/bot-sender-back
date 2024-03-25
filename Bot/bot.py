@@ -106,13 +106,14 @@ ANSWER_PHRASE = [
 @dp.message_handler()
 async def handle_message(message: types.Message):
     modified_text = re.sub(r"(https://www\.)(instagram\.com/.+)", r"\1dd\2", message.text)
+    group = message.chat.id
     if modified_text != message.text:
         await message.answer(modified_text)
         try:
             await message.delete()
         except MessageCantBeDeleted:
             await asyncio.sleep(1)
-    elif message.reply_to_message.from_user.id == bot.id:
+    elif message.reply_to_message.from_user.id == bot.id and group == -1002066951225:
         await message.answer(text=random.choice(ANSWER_PHRASE))
 
 
