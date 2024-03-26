@@ -37,7 +37,5 @@ def create_task(request):
 def delete_task(request,task_id):
     deleteObject = ScheduledTask.objects.get(id=task_id)
     ScheduledTask.delete(deleteObject)
-    queryset = ScheduledTask.objects.all()
-    serializer = ScheduledTaskSerializer(queryset, many=True)
-    return Response(serializer.data,status=status.HTTP_200_OK)
+    return Response(status=status.HTTP_200_OK)
 
