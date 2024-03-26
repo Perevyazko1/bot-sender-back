@@ -12,7 +12,7 @@ import json
 
 @api_view(['GET'])
 @permission_classes((permissions.AllowAny,))
-def get_task(request,chat_id):
+def get_task(request, chat_id):
     queryset = ScheduledTask.objects.filter(chat_id=int(chat_id))
     serializer = ScheduledTaskSerializer(queryset, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
@@ -25,9 +25,9 @@ def get_all_task(request):
 
 @api_view(['POST'])
 @permission_classes((permissions.AllowAny,))
-def create_task(request):
+def create_task(request, chat_id):
     ScheduledTask.objects.update_or_create(day_of_week= request.data["day_of_week"],chat_id= request.data.get('chat_id', 0),time= request.data["time"],task= request.data["task"],task_name= request.data["task_name"],)
-    queryset = ScheduledTask.objects.all()
+    queryset = ScheduledTask.objects.filter(chat_id=int(chat_id))
     serializer = ScheduledTaskSerializer(queryset, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
