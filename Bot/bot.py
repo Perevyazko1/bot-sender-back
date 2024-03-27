@@ -144,7 +144,7 @@ async def send_task():
             'Воскресенье': aioschedule.every().sunday,
         }
         for task in sql_tasks:
-            day_of_week = task.get('day_of_week', 'Ежедневно')
+            day_of_week = task.get('day_of_week')
             if day_of_week in day_mapping:
                 day_mapping[day_of_week].at(time_str=task.get('time')).do(load_task, task.get('chat_id'),
                                                                           task.get('task')).tag(f'{task.get("id")}')
