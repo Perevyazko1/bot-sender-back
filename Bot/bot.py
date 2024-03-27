@@ -2,6 +2,8 @@ import asyncio
 import json
 import os
 import re
+import time
+
 import aioschedule
 import redis
 import requests
@@ -125,6 +127,21 @@ async def load_task(chat_id_group, text_task):
     except BotKicked:
         await asyncio.sleep(1)
 
+def schedule_create_task(day_of_week, time_str, chat_id, task_body, task_id):
+    # Функция для назначения задачи на определенный день и время
+    day_mapping = {
+        "Ежедневно": aioschedule.every().day,
+        "Понедельник": aioschedule.every().monday,
+        "Вторник": aioschedule.every().tuesday,
+        "Среда": aioschedule.every().wednesday,
+        "Четверг": aioschedule.every().thursday,
+        "Пятница": aioschedule.every().friday,
+        "Суббота": aioschedule.every().saturday,
+        "Воскресенье": aioschedule.every().sunday,
+    }
+    if day_of_week in day_mapping:
+        # Добавляем задачу в расписание
+        day_mapping[day_of_week].at(time_str).do(load_task, chat_id, task_body).tag(f'{task_id}')
 
 async def send_task():
     url = f"{os.getenv('SERVER_IP')}/app/get_all_task/"
@@ -132,22 +149,45 @@ async def send_task():
     response = requests.get(url)
 
     if response.status_code == 200:
-        sql_tasks = response.json()  # Парсинг JSON-данных, если ответ в формате JSON
-        day_mapping = {
-            'Ежедневно': aioschedule.every().day,
-            'Понедельник': aioschedule.every().monday,
-            'Вторник': aioschedule.every().tuesday,
-            'Среда': aioschedule.every().wednesday,
-            'Четверг': aioschedule.every().thursday,
-            'Пятница': aioschedule.every().friday,
-            'Суббота': aioschedule.every().saturday,
-            'Воскресенье': aioschedule.every().sunday,
-        }
+        sql_tasks = response.json()  # Парсинг данных, если ответ в формате JSON
+
+        # Перебор задач и запланирование каждой из них
         for task in sql_tasks:
-            day_mapping[task.get('day_of_week')].at(time_str=task.get('time')).do(load_task, task.get('chat_id'),
-                                                                          task.get('task')).tag(f'{task.get("id")}')
+            schedule_create_task(task.get('day_of_week'), task.get('time'), task.get('chat_id'), task.get('task'),
+                          task.get('id'))
     else:
         print('Request failed with status code:', response.status_code)
+    #
+    # if response.status_code == 200:
+    #     sql_tasks = response.json()  # Парсинг JSON-данных, если ответ в формате JSON
+    #     for task in sql_tasks:
+    #         day_of_week = task.get('day_of_week')
+    #         if day_of_week == "Ежедневно":
+    #             aioschedule.every().day.at(time_str=task.get('time')).do(load_task, task.get('chat_id'),
+    #                                                                       task.get('task')).tag(f'{task.get("id")}')
+    #         elif day_of_week == "Понедельник":
+    #             aioschedule.every().monday.at(time_str=task.get('time')).do(load_task, task.get('chat_id'),
+    #                                                                       task.get('task')).tag(f'{task.get("id")}')
+    #         elif day_of_week == "Вторник":
+    #             aioschedule.every().tuesday.at(time_str=task.get('time')).do(load_task, task.get('chat_id'),
+    #                                                                       task.get('task')).tag(f'{task.get("id")}')
+    #         elif day_of_week == "Среда":
+    #             aioschedule.every().wednesday.at(time_str=task.get('time')).do(load_task, task.get('chat_id'),
+    #                                                                       task.get('task')).tag(f'{task.get("id")}')
+    #         elif day_of_week == "Четверг":
+    #             aioschedule.every().thursday.at(time_str=task.get('time')).do(load_task, task.get('chat_id'),
+    #                                                                       task.get('task')).tag(f'{task.get("id")}')
+    #         elif day_of_week == "Пятница":
+    #             aioschedule.every().friday.at(time_str=task.get('time')).do(load_task, task.get('chat_id'),
+    #                                                                       task.get('task')).tag(f'{task.get("id")}')
+    #         elif day_of_week == "Суббота":
+    #             aioschedule.every().saturday.at(time_str=task.get('time')).do(load_task, task.get('chat_id'),
+    #                                                                       task.get('task')).tag(f'{task.get("id")}')
+    #         elif day_of_week == "Воскресенье":
+    #             aioschedule.every().sunday.at(time_str=task.get('time')).do(load_task, task.get('chat_id'),
+    #                                                                       task.get('task')).tag(f'{task.get("id")}')
+    # else:
+    #     print('Request failed with status code:', response.status_code)
     while True:
         # Пытаемся получить задачу из Redis (блокирующий вызов с таймаутом в 1 секунду)
         create_tasks = redis_client.blpop('create_tasks', timeout=1)
@@ -166,9 +206,8 @@ async def send_task():
         if create_tasks:
             _, task_json = create_tasks
             task = json.loads(task_json.decode('utf-8'))
-            day_of_week = task.get('day_of_week')
-            day_mapping[day_of_week].at(time_str=task.get('time')).do(load_task, task.get('chat_id'),
-                                                                      task.get('task')).tag(f'{task.get("id")}')
+            schedule_create_task(task.get('day_of_week'), task.get('time'), task.get('chat_id'), task.get('task'),
+                          task.get('id'))
         if delete_tasks:
             _, task_json = delete_tasks
             task = json.loads(task_json.decode('utf-8'))
