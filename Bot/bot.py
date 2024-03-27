@@ -56,7 +56,7 @@ async def task(message: types.Message):
     markup.add(types.InlineKeyboardButton("Работа с задачами", url=f"{os.getenv('URL_FRONT')}{group}",
                                           callback_data='copy_text'))
     # markup.add(types.InlineKeyboardButton("открыть страницу",web_app=WebAppInfo(url=f"https://perevyazko1.github.io/testprojectwebappbot/{group}")))
-    await message.answer(f' ', reply_markup=markup, parse_mode=ParseMode.MARKDOWN)
+    await message.answer(f'Упраление задачами 👇', reply_markup=markup, parse_mode=ParseMode.MARKDOWN)
 
     try:
         await message.delete()
