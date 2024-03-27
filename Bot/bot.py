@@ -144,12 +144,8 @@ async def send_task():
             'Воскресенье': aioschedule.every().sunday,
         }
         for task in sql_tasks:
-            day_of_week = task.get('day_of_week')
-            if day_of_week in day_mapping:
-                day_mapping[day_of_week].at(time_str=task.get('time')).do(load_task, task.get('chat_id'),
+            day_mapping[task.get('day_of_week')].at(time_str=task.get('time')).do(load_task, task.get('chat_id'),
                                                                           task.get('task')).tag(f'{task.get("id")}')
-            else:
-                print(f"Unsupported day of the week: {day_of_week}")
     else:
         print('Request failed with status code:', response.status_code)
     while True:
