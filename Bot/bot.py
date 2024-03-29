@@ -109,6 +109,7 @@ ANSWER_PHRASE = [
 async def handle_message(message: types.Message):
     modified_text = re.sub(r"(https://www\.)(instagram\.com/.+)", r"\1dd\2", message.text)
     group = message.chat.id
+    regex = r'\bбоулинг\b'
     if modified_text != message.text:
         await message.answer(modified_text)
         try:
@@ -117,6 +118,8 @@ async def handle_message(message: types.Message):
             await asyncio.sleep(1)
     elif message.reply_to_message is not None and message.reply_to_message.from_user.id == bot.id  and group == -1002066951225:
         await message.answer(text=random.choice(ANSWER_PHRASE))
+    elif group == -1002066951225 and re.search(regex, message.text, re.IGNORECASE):
+        await message.answer("Мне кажется вы уже никогда не пойдете в боулинг, но я еще верю в ВАС!!!")
 
 
 @dp.message_handler()
