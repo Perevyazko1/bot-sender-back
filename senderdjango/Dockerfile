@@ -16,19 +16,18 @@ COPY . .
 RUN python manage.py collectstatic --noinput
 
 # Устанавливаем Nginx
-RUN apk update && apk add nginx
 
 # Копируем конфигурацию Nginx
-COPY nginx.conf /etc/nginx/nginx.conf
 
 
 
 # Открываем порт 80
 EXPOSE 80
+EXPOSE 8000
 
 #nginx &&
 
 # Запускаем Nginx и Gunicorn
-CMD ["sh", "-c", "nginx && exec gunicorn senderdjango.wsgi:application --bind 0.0.0.0:8000"]
+CMD ["sh", "-c", "exec gunicorn senderdjango.wsgi:application --bind 0.0.0.0:8000"]
 
 
